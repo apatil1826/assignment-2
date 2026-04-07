@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Interaction } from "@/context/AppContext";
 
 type InteractionItemProps = {
@@ -39,7 +40,15 @@ export default function InteractionItem({ interaction }: InteractionItemProps) {
           <p className="text-sm font-medium text-slate-900">
             {typeLabels[interaction.type]}
           </p>
-          <p className="text-xs text-slate-400">{formatDate(interaction.date)}</p>
+          <div className="flex items-center gap-3">
+            <Link
+              href={`/log/${interaction.id}/edit`}
+              className="text-xs text-slate-400 hover:text-indigo-600 transition-colors"
+            >
+              Edit
+            </Link>
+            <p className="text-xs text-slate-400">{formatDate(interaction.date)}</p>
+          </div>
         </div>
         <p className="text-sm text-slate-600 leading-relaxed">
           {interaction.notes}

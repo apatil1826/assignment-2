@@ -34,7 +34,9 @@ type AppContextType = {
   contacts: Contact[];
   interactions: Interaction[];
   addContact: (contact: Omit<Contact, "id" | "createdAt">) => Contact;
+  editContact: (id: string, data: Partial<Omit<Contact, "id" | "createdAt">>) => void;
   addInteraction: (interaction: Omit<Interaction, "id">) => Interaction;
+  editInteraction: (id: string, data: Partial<Omit<Interaction, "id">>) => void;
 };
 
 const seedContacts: Contact[] = [
@@ -205,6 +207,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return newContact;
   }
 
+  function editContact(id: string, data: Partial<Omit<Contact, "id" | "createdAt">>) {
+    setContacts((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, ...data } : c))
+    );
+  }
+
   function addInteraction(data: Omit<Interaction, "id">): Interaction {
     const newInteraction: Interaction = {
       ...data,
@@ -214,9 +222,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return newInteraction;
   }
 
+  function editInteraction(id: string, data: Partial<Omit<Interaction, "id">>) {
+    setInteractions((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, ...data } : i))
+    );
+  }
+
   return (
     <AppContext.Provider
-      value={{ contacts, interactions, addContact, addInteraction }}
+      value={{ contacts, interactions, addContact, editContact, addInteraction, editInteraction }}
     >
       {children}
     </AppContext.Provider>

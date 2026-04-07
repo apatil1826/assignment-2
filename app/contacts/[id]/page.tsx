@@ -54,12 +54,20 @@ export default function ContactProfilePage() {
               {contact.company ? ` at ${contact.company}` : ""}
             </p>
           </div>
-          <Link
-            href={`/log?contact=${contact.id}`}
-            className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Log Interaction
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href={`/contacts/${contact.id}/edit`}
+              className="border border-gray-200 text-slate-600 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Edit
+            </Link>
+            <Link
+              href={`/log?contact=${contact.id}`}
+              className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Log Interaction
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-6 mt-6 pt-6 border-t border-gray-100">
