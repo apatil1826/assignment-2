@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useAppContext } from "@/context/AppContext";
 import ContactCard from "@/components/ContactCard";
 
@@ -33,9 +34,17 @@ export default function ContactsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-slate-900">Contacts</h2>
-        <span className="text-sm text-slate-400">
-          {filtered.length} contact{filtered.length !== 1 ? "s" : ""}
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-slate-400">
+            {filtered.length} contact{filtered.length !== 1 ? "s" : ""}
+          </span>
+          <Link
+            href="/contacts/new"
+            className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Add Contact
+          </Link>
+        </div>
       </div>
 
       <input

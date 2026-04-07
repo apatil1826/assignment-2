@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAppContext, InteractionType } from "@/context/AppContext";
 
 const interactionTypes: { value: InteractionType; label: string }[] = [
@@ -14,10 +14,19 @@ const interactionTypes: { value: InteractionType; label: string }[] = [
 ];
 
 export default function LogPage() {
+  return (
+    <Suspense>
+      <LogForm />
+    </Suspense>
+  );
+}
+
+function LogForm() {
   const { contacts, addInteraction } = useAppContext();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [contactId, setContactId] = useState("");
+  const [contactId, setContactId] = useState(searchParams.get("contact") ?? "");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [type, setType] = useState<InteractionType>("coffee");
   const [notes, setNotes] = useState("");
