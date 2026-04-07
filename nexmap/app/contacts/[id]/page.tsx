@@ -1,0 +1,123 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { useAppContext } from "@/context/AppContext";
+import InteractionItem from "@/components/InteractionItem";
+
+export default function ContactProfilePage() {
+  const { id } = useParams<{ id: string }>();
+  const { contacts, interactions } = useAppContext();
+
+  const contact = contacts.find((c) => c.id === id);
+  const contactInteractions = interactions
+    .filter((i) => i.contactId === id)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  if (!contact) {
+    return (
+      <div className="text-center mt-20">
+        <p className="text-slate-400 mb-4">Contact not found.</p>
+        <Link href="/contacts" className="text-sm text-indigo-600 hover:underline">
+          Back to contacts
+        </Link>
+      </div>
+    );
+  }
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
+  return (
+    <div>
+      <Link
+        href="/contacts"
+        className="text-sm text-slate-400 hover:text-slate-600 transition-colors mb-6 inline-block"
+      >
+        &larr; Back to contacts
+      </Link>
+
+      {/* Profile header */}
+      <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">
+              {contact.name}
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">
+              {contact.role}
+              {contact.company ? ` at ${contact.company}` : ""}
+            </p>
+          </div>
+          <Link
+            href="/log"
+            className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Log Interaction
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-3 gap-6 mt-6 pt-6 border-t border-gray-100">
+          <div>
+            <p className="text-xs text-slate-400 mb-1">Email</p>
+            <p className="text-sm text-slate-900">
+              {contact.email ?? "—"}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-slate-400 mb-1">LinkedIn</p>
+            <p className="text-sm text-slate-900">
+              {contact.linkedin ?? "—"}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-slate-400 mb-1">Added</p>
+            <p className="text-sm text-slate-900">
+              {formatDate(contact.createdAt)}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5 mt-4">
+          {contact.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-xs bg-gray-100 text-slate-600 px-2 py-0.5 rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Interaction timeline */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-slate-900">
+            Interactions
+          </h3>
+          <span className="text-sm text-slate-400">
+            {contactInteractions.length} total
+          </span>
+        </div>
+
+        {contactInteractions.length === 0 ? (
+          <p className="text-sm text-slate-400 py-4">
+            No interactions logged yet.
+          </p>
+        ) : (
+          <div>
+            {contactInteractions.map((i) => (
+              <InteractionItem key={i.id} interaction={i} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
